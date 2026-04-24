@@ -1,2 +1,2 @@
-# sora
-sora bot whatever bro
+# Yumiru
+to be done soon
