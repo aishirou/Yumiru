@@ -1,2 +1,2 @@
 # Yumiru
-to be done soon
+Yumiru is a discord bot in development.
