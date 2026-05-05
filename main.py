@@ -38,6 +38,12 @@ async def warn(ctx, member: discord.Member, *, reason="not specified"):
         await ctx.send("I couldn't DM that user, but the warn has been logged.")
 
     await ctx.send(embed=en)
-
+    
+@warn.error
+async def warn_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("Nice try bro, but you don't have permission to warn people.")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Usage: `?warn @user [reason]`")
 
 client.run('TOKEN')
