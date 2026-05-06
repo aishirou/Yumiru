@@ -36,7 +36,7 @@ async def warn(ctx, member: discord.Member, *, reason="not specified"):
     if member == ctx.author:
         return await ctx.send("You cannot warn yourself...")
 
-warns = load_warns()
+    warns = load_warns()
     guild_id = str(ctx.guild.id)
     member_id = str(member.id)
 
