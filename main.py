@@ -1,11 +1,29 @@
 import discord
 from discord.ext import commands
+import json
+import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+JSON_PATH = os.path.join(BASE_DIR, "warns.json")
 
 intents = discord.Intents.all()
 intents.message_content = True  # allows reading messages
 
 client = commands.Bot(command_prefix='?', intents=intents)
+
+def load_warns():
+    if not os.path.exists(JSON_PATH):
+        return {}
+    with open(JSON_PATH, "r") as f:
+        try:
+            return json.load(f)
+        except:
+            return {}
+
+def save_warns(data):
+    with open(JSON_PATH, "w") as f:
+        json.dump(data, f, indent=4)
+
 
 @client.event
 async def on_ready():
@@ -17,6 +35,27 @@ async def on_ready():
 async def warn(ctx, member: discord.Member, *, reason="not specified"):
     if member == ctx.author:
         return await ctx.send("You cannot warn yourself...")
+
+warns = load_warns()
+    guild_id = str(ctx.guild.id)
+    member_id = str(member.id)
+
+    if guild_id not in warns:
+        warns[guild_id] = {}
+    
+    if member_id not in warns[guild_id]:
+        warns[guild_id][member_id] = []
+
+    # Add the warning entry
+    warn_entry = {
+        "reason": reason,
+        "warner_id": ctx.author.id,
+        "timestamp": str(ctx.message.created_at)
+    }
+    warns[guild_id][member_id].append(warn_entry)
+    
+    save_warns(warns)
+    total_warns = len(warns[guild_id][member_id])
     
     # send to the channel
     en = discord.Embed(
