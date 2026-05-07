@@ -29,17 +29,18 @@ def save_warns(data):
 async def on_ready():
     print(f"Logged in as {client.user} and ready to help!")
 
-# mentioning others using the bot
-@client.command()
+# Command to ping EVERYONE
+@client.command(aliases=['palleveryone'])
 @commands.has_permissions(mention_everyone=True)
-async def pingeveryone(ctx, *, message=""):
-    """Pings everyone in the server with an optional message."""
-    await ctx.send(f"@everyone {message}")
+async def pingall(ctx, *, message=""):
+    """Usage: ?pingall Hello everyone!"""
+    everyone = ctx.guild.default_role
+    await ctx.send(f"{everyone} {message}")
 
+# Command to ping a SPECIFIC MEMBER or ROLE
 @client.command()
-@commands.has_permissions(mention_everyone=True)
-async def mention(ctx, target: discord.Role, *, message=""):
-    """Pings a specific role. Example: ?mention @Members Hello!"""
+async def ping(ctx, target: discord.Member, *, message=""):
+    """Usage: ?ping @User wake up!"""
     await ctx.send(f"{target.mention} {message}")
 
 # warn command
